@@ -64,15 +64,29 @@ DEFAULT_DESCRIPTION_FORMAT = <<~DESC
   * %{league:map2}
 DESC
 
+class UniversalSet
+  def include?(_)
+    true
+  end
+end
+
 get '/ical/all.ics' do
   title_format = params[:title_format] || DEFAULT_TITLE_FORMAT
   desc_format = params[:description_format] || DEFAULT_DESCRIPTION_FORMAT
 
+  filter_mode = params[:mode]&.split(',') || UniversalSet.new
+  filter_rule = params[:rule]&.split(',') || UniversalSet.new
+
   cal = Icalendar::Calendar.new
   schedule = C.fetch[:result]
   schedule[:regular].each do |regular|
-    gachi = schedule[:gachi].find {|g| g[:start_t] == regular[:start_t]}
+    gachi  = schedule[:gachi].find  {|g| g[:start_t] == regular[:start_t]}
     league = schedule[:league].find {|l| l[:start_t] == regular[:start_t]}
+
+    unless filter_mode.include?('gachi')  && filter_rule.include?(gachi.dig(:rule_ex, :key)) ||
+           filter_mode.include?('league') && filter_rule.include?(league.dig(:rule_ex, :key))
+      next
+    end
 
     cal.event do |e|
       e.dtstart = DateTime.iso8601(regular[:start_utc])
