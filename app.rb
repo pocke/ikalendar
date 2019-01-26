@@ -49,7 +49,25 @@ end
 
 C = Client.new
 
+DEFAULT_TITLE_FORMAT = '%{regular:short_rule} / %{gachi:short_rule} / %{league:short_rule}'
+DEFAULT_DESCRIPTION_FORMAT = <<~DESC
+  %{regular:rule}
+  * %{regular:map1}
+  * %{regular:map2}
+
+  %{gachi:rule}
+  * %{gachi:map1}
+  * %{gachi:map2}
+
+  %{league:rule}
+  * %{league:map1}
+  * %{league:map2}
+DESC
+
 get '/ical/all.ics' do
+  title_format = params[:title_format] || DEFAULT_TITLE_FORMAT
+  desc_format = params[:description_format] || DEFAULT_DESCRIPTION_FORMAT
+
   cal = Icalendar::Calendar.new
   schedule = C.fetch[:result]
   schedule[:regular].each do |regular|
@@ -59,20 +77,8 @@ get '/ical/all.ics' do
     cal.event do |e|
       e.dtstart = DateTime.iso8601(regular[:start_utc])
       e.dtend = DateTime.iso8601(regular[:end_utc])
-      e.summary = "#{short_rule(regular)} / #{short_rule(gachi)} / #{short_rule(league)}"
-      e.description = <<~DESC
-        #{regular[:rule]}
-        * #{regular[:maps_ex][0][:name]}
-        * #{regular[:maps_ex][1][:name]}
-
-        #{gachi[:rule]}
-        * #{gachi[:maps_ex][0][:name]}
-        * #{gachi[:maps_ex][1][:name]}
-
-        #{league[:rule]}
-        * #{league[:maps_ex][0][:name]}
-        * #{league[:maps_ex][1][:name]}
-      DESC
+      e.summary = apply_format(title_format, {regular: regular, gachi: gachi, league: league})
+      e.description = apply_format(desc_format, {regular: regular, gachi: gachi, league: league})
     end
   end
 
@@ -83,4 +89,15 @@ end
 
 def short_rule(s)
   s[:rule].sub('バトル', '').sub('ガチ', '')
+end
+
+def apply_format(fmt, events)
+  res = fmt.dup
+  %i[regular gachi league].each do |mode|
+    res.gsub!("%{#{mode}:short_rule}", short_rule(events[mode]))
+    res.gsub!("%{#{mode}:rule}", events[mode][:rule_ex][:name])
+    res.gsub!("%{#{mode}:map1}", events[mode][:maps_ex][0][:name])
+    res.gsub!("%{#{mode}:map2}", events[mode][:maps_ex][1][:name])
+  end
+  res
 end
