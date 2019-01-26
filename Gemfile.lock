@@ -1,0 +1,26 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    icalendar (2.5.2)
+      ice_cube (~> 0.16)
+    ice_cube (0.16.3)
+    mustermann (1.0.3)
+    rack (2.0.6)
+    rack-protection (2.0.5)
+      rack
+    sinatra (2.0.5)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.5)
+      tilt (~> 2.0)
+    tilt (2.0.9)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  icalendar
+  sinatra
+
+BUNDLED WITH
+   2.0.1
