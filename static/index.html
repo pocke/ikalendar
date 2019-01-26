@@ -1,0 +1,151 @@
+<h1>Ikalendar</h1>
+
+<p>
+  Provide splatoon 2 schedule as iCal format.
+</p>
+
+<h2>Usage</h2>
+
+<p>
+  Register the following URL to your calendar app such as Google Calendar.
+</p>
+
+<pre><code>https://ikalendar.herokuapp.com/ical/all.ics</code></pre>
+
+
+<h2>Configuration</h2>
+
+<p>
+  You can configure the iCal with query strings.
+</p>
+
+<table style="">
+  <thead>
+    <tr>
+      <th>key</th>
+      <th>Description</th>
+      <th>available values</th>
+      <th>default value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>title_format</code></td>
+      <td>Format of event title</td>
+      <td>See <a href="#format">format</a> section</td>
+      <td><code>%{regular:short_rule} / %{gachi:short_rule} / %{league:short_rule}</code></td>
+    </tr>
+
+    <tr>
+      <td><code>description_format</code></td>
+      <td>Format of event description</td>
+      <td>See <a href="#format">format</a> section</td>
+      <td><pre><code>%{regular:rule}
+* %{regular:map1}
+* %{regular:map2}
+
+ガチマッチ: %{gachi:rule}
+* %{gachi:map1}
+* %{gachi:map2}
+
+リーグマッチ: %{league:rule}
+* %{league:map1}
+* %{league:map2}</code></pre></td>
+    </tr>
+
+    <tr>
+      <td><code>mode</code></td>
+      <td>Filter by specified mode</td>
+      <td><code>gachi</code> or <code>league</code></td>
+      <td>Empty</td>
+    </tr>
+
+    <tr>
+      <td><code>rule</code></td>
+      <td>Filter by specified rule</td>
+      <td><code>clam_blitz</code>, <code>splat_zones</code>, <code>tower_control</code> or <code>rainmaker</code></td>
+      <td>Empty</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3 id="format">Format</h3>
+
+The following meta identifiers are available.
+Replace XXX with regular, gachi or league.
+
+<table>
+  <thead>
+    <th>key</th>
+    <th>value example</th>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><code>%{XXX:short_rule}</code></td>
+      <td>ヤグラ</td>
+    </tr>
+
+    <tr>
+      <td><code>%{XXX:rule}</code></td>
+      <td>ガチヤグラ</td>
+    </tr>
+
+    <tr>
+      <td><code>%{XXX:map1}</code></td>
+      <td>スメーシーワールド</td>
+    </tr>
+
+    <tr>
+      <td><code>%{XXX:map1}</code></td>
+      <td>ムツゴ楼</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Example</h3>
+
+<p>
+  Calendar for open Zone on gachi match.
+</p>
+
+<p>
+  raw: <code>https://ikalendar.herokuapp.com/ical/all.ics?mode=gachi&amp;rule=splat_zones&amp;title_format=エリア: %{gachi:map1}, %{gachi:map2}</code>
+</p>
+<p>
+URI encoded: <code>https://ikalendar.herokuapp.com/ical/all.ics?mode=gachi&amp;rule=splat_zones&amp;title_format=%E3%82%A8%E3%83%AA%E3%82%A2:%20%25%7Bgachi:map1%7D,%20%25%7Bgachi:map2%7D</code>
+</p>
+
+<hr />
+
+<p>
+  This application is NOT related to Nintendo Co., Ltd.
+</p>
+
+<p>
+  It uses Spla2 API. <a href="https://spla2.yuu26.com/" target="_blank">https://spla2.yuu26.com/</a>
+</p>
+
+<p>
+  <a href="https://github.com/pocke/ikalendar" target="_blank">Contact</a>
+</p>
+
+
+
+
+
+
+
+<style>
+html {
+  font-size: 1.4rem;
+}
+table {
+  border-collapse: collapse;
+}
+th, td {
+  border: solid 1px #999;
+}
+</style>

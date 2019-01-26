@@ -55,11 +55,11 @@ DEFAULT_DESCRIPTION_FORMAT = <<~DESC
   * %{regular:map1}
   * %{regular:map2}
 
-  %{gachi:rule}
+  ガチマッチ: %{gachi:rule}
   * %{gachi:map1}
   * %{gachi:map2}
 
-  %{league:rule}
+  リーグマッチ: %{league:rule}
   * %{league:map1}
   * %{league:map2}
 DESC
@@ -68,6 +68,12 @@ class UniversalSet
   def include?(_)
     true
   end
+end
+
+set :public_folder, File.expand_path('static', __dir__)
+
+get '/' do
+  send_file File.expand_path('static/index.html', __dir__)
 end
 
 get '/ical/all.ics' do
