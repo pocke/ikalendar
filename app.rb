@@ -42,8 +42,18 @@ class Client
 
   def fetch
     @store.fetch do
-      JSON.parse(Net::HTTP.get(URI.parse(API_URL)), symbolize_names: true)
+      JSON.parse(get(API_URL), symbolize_names: true)
     end
+  end
+
+  private
+
+  def get(url)
+    url = URI.parse(url)
+    res = Net::HTTP.start(url.host, url.port, use_ssl: true) {|http|
+      http.get(url.path, 'User-Agent' => 'Ikalendar: https://github.com/pocke/ikalendar')
+    }
+    res.body
   end
 end
 
